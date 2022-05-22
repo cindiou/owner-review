@@ -1,0 +1,208 @@
+Vue.use(Vuex)
+store=new Vuex.Store({
+	state:{},
+	mutations:{},
+	actions:{},
+	getters:{},
+	modules:{},
+})
+
+new Vue({
+	store,
+})
+
+# 单一状态树
+	每个应用将仅仅包含一个 store 实例
+
+state
+	this.$store.state
+	mapState在computed中复合
+		数组
+		对象
+			别名
+			函数
+				非箭头函数=>引用this
+	扩展操作符
+getters
+	# store的计算属性，缓存计算结果
+	# mapGetters在computed中复合
+	this.$store.getters.doneTools
+
+	通过方法访问：高阶函数
+		每次都会去进行调用，而不会缓存结果
+	参数
+		state,getters
+mutations
+	参数
+		state,payload
+	# 更改state,必须commit
+store.commit('increment', 10)
+store.commit({
+  type: 'increment',
+  amount: 10
+})
+	# 只处理同步事务
+	# 使用常量替代 Mutation 事件类型
+		计算属性
+	# mapMutations在methods中复合
+
+actions
+	参数
+		context
+			commit
+			disptach
+			getters
+			state
+		payload
+	# 提交参数的风格：对象形势 | 负载形势
+	# this.$store.disptach()
+	# mapActions在methods中复合
+
+# 组合多个 action，以处理更加复杂的异步流程？
+actions: {
+  actionA ({ commit }) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        commit('someMutation')
+        resolve()
+      }, 1000)
+    })
+  }
+}
+
+store.dispatch('actionA').then(() => {
+  // ...
+})
+
+
+# 使用async函数
+
+
+
+
+
+modules
+	# 默认情况下，模块内部的 action、mutation 和 getter 是注册在全局命名空间的
+	# 注意 state写成函数
+	# 注意getters、actions中额外的参数
+    const store = new Vuex.Store({
+      modules: {
+        account: {
+          namespaced: true,
+
+          // 模块内容（module assets）
+          state: () => ({ ... }), // 模块内的状态已经是嵌套的了，使用 `namespaced` 属性不会对其产生影响
+          getters: { // 参数:state,getters，rootState,rootGetters,
+            isAdmin () { ... } // -> getters['account/isAdmin']
+          },
+          actions: { // 参数: namespacedContext
+            login () { ... } // -> dispatch('account/login')
+          },
+          mutations: {
+            login () { ... } // -> commit('account/login')
+          },
+
+          // 嵌套模块
+          modules: {
+            // 继承父模块的命名空间
+            myPage: {
+              state: () => ({ ... }),
+              getters: {
+                profile () { ... } // -> getters['account/profile']
+              }
+            },
+
+            // 进一步嵌套命名空间
+            posts: {
+              namespaced: true,
+
+              state: () => ({ ... }),
+              getters: {
+                popular () { ... } // -> getters['account/posts/popular']
+              }
+            }
+          }
+        }
+      }
+    })
+
+
+# 在带命名空间的模块内访问全局内容	
+	dispatch('someOtherAction', null, { root: true }) // -> 'someOtherAction'
+	commit('someMutation', null, { root: true }) // -> 'someMutation'
+
+
+# 在带命名空间的模块注册全局 action
+ actions: {
+        someAction: {
+          root: true,
+          handler (namespacedContext, payload) { ... } // -> 'someAction'
+        }
+      }
+
+# 带命名空间的绑定函数
+computed: {
+  ...mapState('some/nested/module', {
+    a: state => state.a,
+    b: state => state.b
+  })
+},
+
+
+import { createNamespacedHelpers } from 'vuex'
+const { mapState, mapActions } = createNamespacedHelpers('some/nested/module')
+
+
+# 模块动态注册
+// 注册模块 `myModule`
+  store.registerModule('myModule', {
+    // ...
+  })
+// 注册嵌套模块 `nested/myModule`
+  store.registerModule(['nested', 'myModule'], {
+    // ...
+  })
+
+store.unregisterModule(moduleName) 来动态卸载模块
+store.hasModule(moduleName) 方法检查该模块是否已经被注册到 store
+
+
+
+# 项目结构
+# 插件
+const store = new Vuex.Store({
+  // ...
+  plugins: process.env.NODE_ENV !== 'production'
+    ? [myPluginWithSnapshot]
+    : []
+})
+const myPlugin = store => {
+  // 当 store 初始化后调用
+  store.subscribe((mutation, state) => {
+    // 每次 mutation 之后调用
+    // mutation 的格式为 { type, payload }
+  })
+}
+
+# 严格模式
+const store = new Vuex.Store({
+  // ...
+  strict: process.env.NODE_ENV !== 'production'
+})
+
+
+# 表单处理
+<input v-model="obj.message">
+	# <input :value="message" @input="updateMessage">
+	# 通过计算属性
+computed: {
+  message: {
+    get () {
+      return this.$store.state.obj.message
+    },
+    set (value) {
+      this.$store.commit('updateMessage', value)
+    }
+  }
+}
+	# watch监听

@@ -1,0 +1,319 @@
+选项
+指令
+  双向绑定
+父子通信 | 引用
+插槽
+
+静态方法
+  Vue.use
+  Vue.extend | Vue.component
+  Vue.filter
+  Vue.directive
+  Vue.mixin
+实例方法 | 实例属性
+响应式 | 异步更新
+动态组件 | 异步组件
+
+======================================================
+
+声明响应式
+	数组的更新检测：
+		push/pop/shift/unshift/splice/sort/reverse
+		直接对数组索引赋值并不能触发响应式
+			this.arr.splice(index,1,newVal)
+			this.$set(this.arr,index,newVal)
+异步更新
+	await this.$nextTick()
+
+{{}}
+  Javascript表达式
+  不能访问全局变量，只能访问全局变量的一个白名单，如：Math/Date
+
+
+实例成员
+  $once
+  $on
+  $off
+  $forceUpdate()
+
+  vm.$el
+  vm.$data
+    $options
+    $props
+  vm.$watch("a.b.c",(newVal,oldVal)=>{})
+  
+
+
+
+
+# 指令
+v-html
+v-text
+v-pre
+v-cloak
+v-once
+
+# 简写
+v-bind
+  :prefix-suffix="['active',attr]"
+  动态参数
+    :[someAttr]="doSomething"
+    v-bind="obj"
+v-on
+  $event
+    # 事件处理
+    # 事件名：推荐你始终使用 kebab-case 的事件名(短横线)
+    一般修饰符
+      prevent
+      stop
+      once
+      capture
+      passive
+      self
+        注意顺序
+        .click.self.prevent	只阻止自身的点击事件
+        .click.prevent.self	阻止所有的点击事件
+    按键修饰符
+      meta
+      shift
+      ctl
+      alt
+      
+      down/up/left/right
+      space/tab/esc
+      enter/delete
+
+    鼠标修饰
+      left
+      right
+      middle
+
+    自定义按键修饰符
+      Vue.config.keyCodes.A=65
+      // 原先:@click.keyup.65
+      // 现在:@click.keyup.A
+v-model
+  # 修饰符
+    lazy
+    number
+    trim
+v-for
+  # 列表渲染
+    template元素使用，避免多嵌套一层
+    比v-if的优先级高
+  # key作用：管理可复用的元素
+v-if
+  v-if-else
+  v-else
+v-show
+
+
+
+
+
+el
+template
+components
+
+data
+  # 组件
+    data(){}
+props
+  对象语法
+    # default
+    # required
+    # validator
+	# HTML中短横线 -> JavaScript中驼峰命名
+	# 不应该在组件中改变props值
+​  # 1. 那些 prop 会在一个组件实例创建之前进行验证，所以实例的 property (如 data、computed 等) 在 default 或 validator 函数中是不可用的。
+  # 2.type 还可以是一个自定义的构造函数，并且通过 instanceof 来进行检查确认
+  
+	一次性绑定所有的属性 到子组件中的某个dom上
+		v-bind='$attrs'
+	将所有的事件监听器指向这个组件的某个特定的子元素
+		v-on="$listeners" 
+method
+computed
+	依赖的响应式系统中的数据发生变化时，才重新渲染
+	setter/getter
+watch
+  (newVal,oldVal)=>{}
+provide
+inject
+
+filters
+mixins
+directives
+
+functional
+inheritAttrs
+
+
+
+
+# 组件:全局组件、局部组件
+# 作用域:data数据范围
+Vue.extend
+Vue.component
+Vue.filter
+vue.mixin
+Vue.directive
+
+父子通信
+  props
+  事件
+    this.$emit
+父子引用
+  $children
+  $refs
+    当 ref 和 v-for 一起使用的时候，你得到的 ref 将会是一个包含了对应数据源的这些子组件的数组。
+  $parent
+  $root
+
+
+
+# 插槽
+v-slot一般只能在template标签中使用，除了单插槽是默认插槽的情况
+v-slot具有缩写
+	<slot name="left"></slot>
+	<slot></slot>
+具名插槽
+作用域插槽
+	独占默认插槽
+	插槽解构、解构默认值
+
+
+
+
+# 组件上实现双向绑定
+# 一个组件上的 v-model 默认会利用名为 value 的 prop 和名为 input 的事件
+<custom-input
+  v-model="searchText"
+></custom-input>
+// 等价于
+<custom-input
+  v-bind:value="searchText"
+  v-on:input="searchText = $event"
+></custom-input>
+
+# 改变v-model双向绑定的默认事件与属性
+Vue.component('base-checkbox', {
+  model: {
+    prop: 'checked',
+    event: 'change'
+  },
+  props: {
+    checked: Boolean // 仍然需要在组件的 props 选项里声明 checked 这个 prop。
+  },
+  template: `
+    <input
+      type="checkbox"
+      v-bind:checked="checked"
+      v-on:change="$emit('change', $event.target.checked)"
+    >
+  `
+})
+
+
+.sync属性
+<text-document
+  v-bind:title="doc.title"
+  v-on:update:title="doc.title = $event"
+></text-document>
+// 等价于
+<text-document v-bind:title.sync="doc.title"></text-document>
+
+# 带有 .sync 修饰符的 v-bind 不能和表达式一起使用 (例如 v-bind:title.sync=”doc.title + ‘!’” 是无效的)
+
+<text-document v-bind.sync="doc"></text-document>
+// 用一个对象同时设置多个 prop 的时候
+
+
+
+# 混入：mixins
+	数据对象在内部会进行递归合并，并在发生冲突时以组件数据优先。
+	值为对象的选项，例如 methods、components 和 directives,将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。
+	同名钩子函数将合并为一个数组，因此都将被调用。另外，混入对象的钩子将在组件自身钩子之前调用。
+
+	全局混入
+		Vue.mixin({})
+		请谨慎使用全局混入，因为它会影响每个单独创建的 Vue 实例 (包括第三方组件)
+	自定义选项合并策略
+
+
+
+
+动态组件
+	<component :is="view"></component>
+	保存组件状态
+	<keep-alive> 要求同时只有一个子元素被渲染
+异步组件
+
+
+
+# 指令:directives
+	Vue.directive("focus",{inserted(el){ el.focus() }})
+
+	钩子函数
+		bind:只调用一次，指令第一次绑定到元素时调用
+		unbind
+		inserted:被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)
+		update:可能发生在其子 VNode 更新之前
+		componentUpdated:指令所在组件的 VNode 及其子 VNode 全部更新后调用
+
+  # 例子：v-demo:foo.a.b="message"
+  el
+  binding
+    name
+      "demo"
+    expression
+      "message"
+    value
+      去当前实例中查找属性"message"的值
+      oldValue
+    arg
+      "foo"
+    modifiers
+      {"a":true,"b":true}
+
+  动态指令参数
+    v-mydirective:[argument]="value"
+  函数简写
+    在 bind 和 update 时触发相同行为
+  对象字面量
+
+
+
+# 过滤器
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
+
+{{ message | filterA('arg1', arg2) }}
+// filterA 被定义为接收三个参数的过滤器函数。其中 message 的值作为第一个参数
+
+
+
+# 插件
+# Vue.use(MyPlugin, { someOption: true })
+MyPlugin.install = function (Vue, options) {
+  // 1. 添加全局方法或 property
+  Vue.myGlobalMethod = function () {
+    // 逻辑...
+  }
+
+  // 2. 添加全局资源
+  Vue.directive('my-directive', {
+    bind (el, binding, vnode, oldVnode) {
+      // 逻辑...
+    }
+    ...
+  })
+
+  // 4. 添加实例方法
+  Vue.prototype.$myMethod = function (methodOptions) {
+    // 逻辑...
+  }
+}

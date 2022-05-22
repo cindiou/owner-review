@@ -1,0 +1,84 @@
+transition
+	# 三种不同检测过渡或动画阶段的方式
+	# 根据name属性生成对应的类名，name默认值v；
+	# 用来自定义过渡或动画
+	name:prefix
+		prefix-enter
+		prefix-enter-active
+		prefix-enter-to
+	
+		prefix-leave
+
+		prefix-appear
+
+	# 自定义过渡的类名；
+	# 用来配合与animate库使用
+	enter-class
+	enter-active-class
+	enter-to-class
+
+	...
+
+
+	# 钩子函数
+	# 用来配合Velocity.js
+	:css="false"
+
+	before-enter
+	enter
+		enter: function (el, done) {}
+	after-enter
+	enter-cancelled
+
+
+
+	appear
+	type:"animation" | "transition"
+	:duration="1000"
+		:duration="{ enter: 500, leave: 800 }"
+
+
+
+	mode:"out-in" | "in-out"
+
+多个元素的过渡
+	v-if/v-else
+	给同一个元素的 key attribute 设置不同的状态来代替 v-if 和 v-else
+	使用动态组件
+	
+
+
+
+# 列表过渡
+transition-group
+	# 内部元素总是需要提供唯一的 key attribute 值。
+	# CSS 过渡的类将会应用在内部的元素中
+	# 不同于 <transition>，它会以一个真实元素呈现：默认为一个 <span>
+
+	tag
+	name:prefix
+		# 添加了一个新的类：prefix-move;当然，也可以自定义move-class
+		# 会在元素的改变定位的过程中应用
+
+		# 内部的实现，Vue 使用了一个叫 FLIP 简单的动画队列
+		# 注意的是使用 FLIP 过渡的元素不能设置为 display: inline 。作为替代方案，可以设置为 display: inline-block 或者放置于 flex 中
+
+
+
+
+# 动态过渡
+<transition v-bind:name="transitionName">
+  <!-- ... -->
+</transition>
+
+
+# 状态过渡：更多可能
+数据要么本身就以数值形式存储，要么可以转换为数值。有了这些数值后，我们就可以结合 Vue 的响应式和组件系统，使用第三方库来实现切换元素的过渡状态
+
+数字和运算
+颜色的显示
+SVG 节点的位置
+元素的大小和其他的 property
+
+Gsap.js
+Tween.js 和 Color.js 

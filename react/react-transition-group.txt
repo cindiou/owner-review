@@ -1,0 +1,53 @@
+import {
+  CSSTransition,
+  SwitchTransition,
+  TransitionGroup
+} from "react-transition-group";
+
+
+CSSTransition
+  # 一般用来组件的显示和隐藏
+  in
+    # in为true时，添加appear和enter这些类
+    # in为false时，添加exit这些类
+  classNames
+    # classNames属性命名将作为下列样式的前缀
+    前缀-enter
+    前缀-enter-active
+    前缀-enter-done
+
+    前缀-exit
+    前缀-exit-active
+    前缀-exit-done
+
+    # appear类必须在appear属性添加后才会存在
+    前缀-appear
+    前缀-appear-active
+    前缀-appear-done
+  appear
+    # 定义首次渲染时，是否需要过渡
+  timeout
+  addEndListener:(node,done)=>{
+    node.addEventListener("transitionend",done,false)
+  }
+    # 在timeout不存在时，用来判断过渡特效何时会结束
+  unmountOnExit
+
+  onEnter：(node)=>{
+    # 用来控制 in 属性的值 从而间接控制enter和exit类的切换
+  }
+  onEntering
+  onEntered
+  onExit
+  onExiting
+  onExited
+
+
+# 以下两者结合CSSTransition使用
+# 都需要给CSSTransition添加key
+# CSSTransition只需要用到少数属性，如：classNames,timeout,unmountOnExit
+SwitchTransition
+  # 控制单个CSSTransition组件内包裹元素前后改变的样式
+
+TransitionGroup
+  # 控制一系列CSSTransition组件的样式

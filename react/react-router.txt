@@ -1,0 +1,140 @@
+注意路由跳转有两种方式
+  1.点击<Link/>或<NavLink/>渲染的元素，跳转
+  2.直接在浏览器地址栏输入路由进行跳转
+
+  组件<Switch/>，影响的仅仅是只能在可匹配的路由中 唯一、排他，改变<Route/>的匹配行为，只允许匹配唯一一个；如果地址栏显示:/about/history，而<Route path="/about" />，意味着依然可以匹配该路由
+
+  因此，<Route/>组件上的exact属性仍有存在的必要，确保只有当跳转路径 与 path属性完全匹配后才渲染该组件
+
+  <NavLink/>上的exact又有啥作用？规定了只有当 其to属性 与 <Route/>上的path属性完全一致时，才认为<NavLink/>处于激活状态（具有.active样式）
+
+import {
+  withRouter,
+  useLocation,
+  useParams,
+  useHistory,
+  useRouteMatch,
+
+  BrowserRouter,
+  HashRouter,
+  NavLink,
+  Link,
+  Redirect,
+  Switch,
+  Route,
+} from "react-router-dom"; # "react-router"
+
+Link  
+  to
+  component
+  innerRef
+  replace
+  {/*额外属性，可以自动传递给实际渲染的元素*/}
+NavLink         # Link的特殊版本，除了具有以上属性
+  isActive={(match,location)=>{
+    return true|false
+  }}
+  style={Object|Fcuntion}
+  style={(isActive)=>{
+    return {color ? isActive:"red":"blue"}
+  }}
+    activeStyle
+  className={String|Array|Function}
+    activeClassName
+  exact
+  strict
+
+Redirect
+  from
+  to
+  push
+  strict
+  exact
+  sensitive
+Switch
+  具有更具体的path的<Route/>应该放在更前面，因为Switch具有排他性，而且更详细的location.pathname也会匹配模糊path
+
+Route
+  children={Function}
+    必须判断match
+  render
+  component
+    相比于前两者，当内联函数时，有可能导致组件重新渲染
+      # children > component > render
+      # https://codesandbox.io/s/kind-wing-uzey5e?file=/src/App.js
+      # https://ithelp.ithome.com.tw/articles/10205106
+
+      # 详解render | component
+      # https://www.cnblogs.com/echolun/p/15693622.html
+      创建组件的方式不同，component 使用的是 React.createElement，箭头函数情况下由于每次返回的都是一个新组件，所以每次都会触发完整的生命周期；而 render 可以理解执行了一个匿名函数，得到了一个组件，自始至终都是这一个组件，后续更新只是diff比较，就没有额外繁琐的生命周期处理，性能更佳。
+
+  path={String|Array}
+    可以别名，多个路由指向同一个组件
+  exact
+  strict
+  sensitive
+
+
+routeProps
+  # 什么时候组件具有routeProps属性？答：只有当组件是通过<Route/>渲染出来时，才具有这些属性；或者通过高阶组件withRouter包裹
+
+  location
+    pathname
+    search
+    hash
+    state
+    key
+  history
+    push
+    replace
+    go
+    goBack
+    goForward
+  match
+    params
+    isExact
+
+
+
+// V6版本的React 暂时搁置
+useLcoation
+useHistory
+useParams
+useMatch
+
+useSearchParams
+useHref
+
+useNavigate
+useOutlet
+useRoutes
+	component
+  path
+	children
+
+
+
+
+
+BrowserRouter
+Routes
+Route
+	path
+		*
+		index
+	index
+	element
+		没有elment时充当Outlet
+Link
+NavLink
+	end
+    ===exact
+	isActive
+Navigate
+	to
+	replace
+Outlet
+
+// React 中的状态自动保存（KeepAlive）
+https://segmentfault.com/a/1190000020760147
+https://codesandbox.io/s/zui-jian-react-keepalive-shi-xian-forked-x2vdlb?file=/src/KeepAlive.js

@@ -1,0 +1,41 @@
+vim
+	三种操作模式
+	正常
+		yy
+			p
+		dd
+		x
+		d1G dG d0 d$
+		y1G y$ y0 y$
+		dw yw
+
+		u
+		ctr+r
+
+		N shfit+g 移动到第几行
+			n + enter 向下移动几行
+		gg
+		G
+			HML
+		hjkl
+	编辑
+		
+	命令
+		:set nu
+		:set nonu
+		:q
+		:q!
+		:wq
+
+		:/word
+			搜索模式
+			n N
+			:?word
+
+		:n1,n2s/word1/word2/g
+			:1,$s/word1/word2/g
+			:%s/word1/word2/g
+
+		:w [file]
+		:r [file]
+		:n1,n2 w [file]

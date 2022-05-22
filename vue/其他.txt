@@ -1,0 +1,59 @@
+
+https://blog.csdn.net/atu1111/article/details/119560751?utm_term=vue%20~@%E5%92%8C@&utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~sobaiduweb~default-3-119560751&spm=3001.4430
+处理资源路径
+	在 JavaScript 被导入或在 template/CSS 中通过相对路径被引用。这类引用会被 webpack 处理。
+
+	放置在 public 目录下或通过绝对路径被引用。这类资源将会直接被拷贝，而不会经过 webpack 的处理。
+
+
+	如果路径是绝对路径 (例如 /images/foo.png)，会原样保留。
+	如果路径以 . 开头，将会被看作相对的模块依赖，并按照你的本地文件系统上的目录结构进行解析。
+	如果路径以 ~ 开头，其后的部分将会被看作模块依赖。这意味着你可以用该特性来引用一个 Node 依赖中的资源：
+	如果路径以 @ 开头，也会被看作模块依赖。如果你的 webpack 配置中给 @ 配置了 alias，这就很有用了。所有 vue-cli 创建的项目都默认配置了将 @ 指向 /src
+
+
+
+使用预处理器
+	sass
+		共享全局变量
+	排除 node_modules
+
+Scoped CSS
+	本地和全局样式
+	scoped 局部CSS原理
+		不过一个子组件的根节点会同时受其父组件的 scoped CSS 和子组件的 scoped CSS 的影响
+		最好不要使用标签选择器，使用 class 或者 id 取而代之
+		在递归组件中小心使用后代选择器
+	深度作用选择器 | 动态生成的内容v-html
+		.a >>> .b
+
+
+CSS Modules
+	module
+
+自定义块
+
+
+
+vue-cli
+	vue create <project-name>
+	vue ui
+
+HTML 与 静态资源
+	推荐将资源作为你的模块依赖图的一部分导入
+	何时使用 public 文件夹
+
+
+	configureWebpack
+	chainWebpack
+
+
+模式和环境变量
+	vue-cli-service build --mode staging
+
+	.env
+	.env.local
+	.env.[mode]
+	.env.[mode].local
+
+	VUE_APP_开头的字符串

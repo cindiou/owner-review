@@ -1,0 +1,122 @@
+JSX语法
+  <Other />
+  {/*JavaScript表达式*/}
+  单个根组件
+    <Fragment>
+    <>
+  React组件大写
+    <MyComponents.DatePicker />
+
+state
+  setState
+    有无状态组件
+  即是同步于，也是异步
+  合并
+    不可变性
+
+  父子通信
+  state提升
+    数据如何管理？是托管到父节点，还是自己单独管理？
+    React组件设计哲学
+
+
+props
+  如何优雅的传递属性
+    对象解构语法
+    {...props}
+      {...{a,b}}
+  如何防止在props没有变化时，过渡渲染
+    shouldComponentUpdate
+    memo(funcComponent,(prevProps,nextProps)=>{})
+
+    尽量不要直接传递对象/函数属性
+    <Other f={()=>{}} o={{a:"",b:""}}/>
+
+  一些属性无法被过滤
+    ref/key
+
+  插槽/作用域插槽  
+    children/render
+
+context
+  动态切换context
+  同时消费多个context
+
+ref
+  非受控组件
+  ref转发
+
+Fragment
+Suspense/lazy
+错误边界
+  componentDidCatch
+  static getDerivedStateFromError
+ReactDOM.createPortal
+
+
+条件渲染
+  IIFE
+    立即执行函数表达式
+  对象属性
+    {}[]
+  三元运算符
+  逻辑运算符、短路语法
+  useMemo
+列表渲染
+  key
+
+事件处理
+  this指向!!!
+  取消默认事件行为
+    preventDefault()
+  外部点击模式
+  焦点模式!!!
+    currentTarget
+    relatedTarget
+  onClickCapture
+
+生命周期
+  constructor
+  getDerivedStateFromProps
+    UNSAFE_compnentWillMount
+  render
+  componentDidMount
+
+  getDerivedStateFromProps
+    UNSAFE_componentWillReceiveProps
+  shouldComponentUpdate
+    UNSAFE_compnentWillUpdate
+  render
+  getSnapshotBeforeUpdate
+  componentDidUpdate
+
+
+create-react-class
+  getInitialState
+  getDefaultProps
+
+prop-types
+
+
+高价组件
+  withFetcher
+  withConditialRendering
+  withLoadingIndicators
+  withEither
+  withMaybe
+
+Hooks
+
+
+function Parent(props){
+  只有当传递的有多个子组件时，props.children才是数组；
+  这里只有一个函数，props.children就是这个函数本身
+}
+<Parent>
+  {
+    ()=>{}
+  }
+</Parent>
+
+
+

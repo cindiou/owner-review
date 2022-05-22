@@ -1,0 +1,199 @@
+reboot
+	-r
+halt
+	-h
+sync	同步
+shutdown -h now 关机
+shutdown -r now 重启
+
+
+help
+man
+pwd
+
+
+文件名后面加"/"会被认为是文件夹
+ls -ahl
+ll
+cd
+mkdir -p 
+rmdir
+touch
+rm -rf
+cp source dest
+\cp source dest
+mv source dest
+	同一个目录等于重命名
+ln -s source dest
+
+echo
+cat -8 | more
+head -5
+tail -5
+less
+
+history
+date
+cal
+
+
+find [范围] [选项] [参数]
+	    -name
+	    -user
+            -size
+which
+grep -ni 搜索字符串 文件
+
+
+
+
+
+
+groupadd
+groupdel
+
+useradd -d
+	useradd -g 组名 用户
+
+passwd
+userdel -r
+
+groups
+id
+whoami
+su - 用户
+
+
+文件|目录=>[默认谁创建了，谁就是其拥有者，拥有者所在的组也就是其所在组，除所在组之外就是其他组]
+目录：rwx分别代表什么
+
+chown -R [用户] [文件|目录]
+	改变拥有者
+chgrp -R [组名] [文件|目录]
+	改变所在组
+usermod -g 组名 用户
+        -G 用户增添另一个组；用户同时可以属于多个组
+usermod -d
+
+chmod [ugoa][+-][rwx] 文件|目录
+chmod 755 文件|目录
+	r=4，w=2，x=1
+	
+
+执行权限
+	文件|目录 是谁创造的就是谁的，一般用户不能随意更改目录内容（比如：在该目录内创建、删除、重命名文件等）或 肆意修改文件内容；
+
+	一般用户只能在自己的家目录 可以肆意妄为
+		例如：cindiou用户 一般只能在 /home/cindiou/ （用户对应的家目录） 
+
+
+
+
+
+
+运行级别
+	init
+systemctl get-default
+systemctl set-default TARGET.target
+	multi-user.target
+	graphical.target
+
+
+
+
+
+ping
+ifconfig
+
+
+
+gzip
+gunzip
+zip -r dest source
+unzip -d dest source
+
+tar -zcvf dest source1 source2
+	压缩
+tar -zxvf source -C dest
+	解压缩
+	
+
+ls -lR /opt | grep "^-" | wc -l
+
+
+/etc/hosts
+/etc/hostname
+/etc/profile
+	source /etc/profile
+/etc/sudoers
+	visudo
+
+
+rpm
+	-q 检测是否安装某软件包
+	-qi
+	-ql 查询软件包下所有的文件
+	-qf 查询文件所属软件包
+
+	-e	卸载
+	-e --nodeps 
+
+	-ivh 安装
+yum
+dnd
+
+
+
+
+groups 用户
+	参看用户属于哪个组；
+	一个用户可以添加到多个组里面，同时获取这些组的权限
+
+
+
+
+周期性执行 | 时间规则
+crontab -e
+	service crond restart
+crontab -l
+crontab -r
+
+
+单次调度
+前提atd进程存在:ps -ef | grep atd
+at 时间
+	now + 2 days
+	now + 2 hours
+	16:04
+	5pm + 3 days
+atq
+atrm
+
+	
+
+
+ps -ef | grep atd
+ps -aux | grep atd
+pstree -p
+       -u
+kill -9
+
+
+netstat -nap | more
+	参看网络状态
+netstat -lnt | grep 80
+
+service 服务名 [start | stop | status | reload | restart]
+systemctl [start | stop | status | restart | reload] 服务名
+systemctl list-unit-files [ | grep 服务名]
+	查看哪些服务是默认自启动的；在 centos7 版本默认 systemctl 操作的运行级别只针对 3 和 5
+systemctl enable
+	  disable
+	  is-enabled
+
+firewall-cmd --query-port=端口/协议
+firewall-cmd --permanent --add-port=
+			--remove-port=
+
+注意：改变端口的状态后，需要执行一下命令才能生效
+firewall-cmd --reload

@@ -1,0 +1,154 @@
+// @ts-nocheck
+import {createAction,
+        createReducer,
+        createSlice,      # 常用
+        createAsyncThunk, # 常用
+        createSelector,   # 常用
+        configureStore,   # 生成store
+        nanoid,
+        current,          # 对代理的state解包
+        unwrapResult/*unwrap()*/,
+} from "@redux/toolkit";
+import {Provide,connect,useDispatch,useSelector,useStore} from "react-redux";
+import {createStore,combineReducers,applyMiddlewave,compose} from "react";
+// store.replacerReducer()
+
+createAction(TypeName,prepare)
+  prepare
+    nanoid()
+    # 返回的action对象中只能包含四个字段：type/payload/meta/error
+  返回值
+    # 重写toString
+    # 具有.match(actionObject)
+createReducer(initalState,(builder)=>{
+  builder
+    .addCase(increment, (state, action) => {
+      //...
+    })
+    .addMatcher(
+      (action) => action.startsWith('i'),
+      (state,action)=>{
+        //...
+      }
+    )
+    .addDefaultCase((state, action) => {
+      //...
+    })
+})
+  # Matcher Case 和 Single Case 可以同时执行
+
+
+
+
+# 综合了前两者
+const slice=createSlice({
+  name:"",
+  initalState,
+  reducers:{
+    increment(state,action){
+      // Immer库，已经实现了不可变性
+    },
+    decrement:{
+      prepare(...args){ # 允许输入参数
+        return {
+          type,
+          meta,
+          error,
+          payload
+        }
+      },
+      reducer(state,action){
+
+      }
+    }
+  },
+  extraReducers:Object | Function : (builder)=>{}
+})
+  name的作用
+  reducers与extraReducers的区别
+  不可变性
+  返回值slice具有的参数：
+    const {actionFn_One,actionFn_Two,...}=slice.actions; # 生成action函数
+    export default slice.reducer; #导出局部的reducer函数
+
+
+
+const fetcher = createAsyncThunk(type,async AsyncDeal function(arg,ThunkAPI){},[options])
+	# AsyncDeal只接受两个参数:
+    	arg : fetcher接受的参数
+        	// 这也意味着fetcher如果要传递多个值时，只能传递对象
+        	// dispatch(fetcher({status: 'active', sortBy: 'name'})).
+        ThunkAPI
+        	getState
+            dispatch
+            rejectWithValue(value, [meta])
+				{action:`${type}/rejected`,payload:value,meta:[meta]}
+            fulfillWithValue(value, meta)
+				{action:`${type}/fulfilled`,payload:value,meta:[meta]}
+            signal
+  # 注意事项
+    //如果想要知道请求是否失败，需要使用 unWrap或unWrapResult
+      1.dispatch(fetcher(arg))的返回值，是被包装的对象
+        要取得实际的返回值需要.unwrap() 或者 unwrapResult(返回值)
+        还具有abort方法
+      2.取消请求
+        # 在执行前取消，不会dispatch任何action，
+        fetch API
+        axios API
+  # 生成的fetch函数具有是三个属性
+    .pedding
+      `${type}/pedding` # type属性即生成fetcher时，传入的type
+    .fulfilled
+    .rejected
+
+
+
+
+const selectTax = createSelector(
+  selectSubtotal,
+  selectTaxPercent,
+  (subtotal, taxPercent) => subtotal * (taxPercent / 100)
+) // 前两个个函数接受state,将返回结果 都 传给后一个函数，最后一个函数计算后返回结果
+  # 如果 input-selectors 的值和前一次的一样，它将会直接返回前一次计算的数据，而不会再调用一次转换函数。
+    # 缓存计算值
+
+    # 来自 'reselect' 库
+
+  # 计算渲染
+    mapStateToProps:(state,ownProps)=>{}
+    mapDispatchToProps:(dispatch,ownProps)=>{}
+    makeMapStateToProps
+      # 如果 connect 的 mapStateToProps 返回的不是一个对象而是一个函数，他将被用做为每个容器的实例创建一个单独的 mapStateToProps 函数
+      /*
+          <VisibleTodoList listId="1" />
+          <VisibleTodoList listId="2" />
+          <VisibleTodoList listId="3" />
+
+          const makeMapStateToProps = () => { # 一个 返回mapStateToProps函数 的函数
+            const getVisibleTodos = makeGetVisibleTodos() # 确保 每一个返回的mapStateToProps都引用一个自己的selector函数
+            const mapStateToProps = (state, props) => {
+              return {
+                todos: getVisibleTodos(state, props)
+              }
+            }
+            return mapStateToProps
+          }
+
+          const VisibleTodoList = connect(
+            makeMapStateToProps, # makeMapToProps
+            mapDispatchToProps
+          )(TodoList)
+      */
+  
+
+实现可撤销重做
+子应用隔离
+代码分割
+            reducerManager
+组织reducer
+
+
+中间件实质
+            store=>next=>action=>{
+
+            }
